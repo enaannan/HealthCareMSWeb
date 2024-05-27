@@ -10,7 +10,7 @@ export interface User {
     contact_number:string
     address:string
     password:string
-    role_name:string
+    role_name?:string
 }
 
 export interface LoginCredentials{
