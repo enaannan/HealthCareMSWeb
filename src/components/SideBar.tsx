@@ -1,19 +1,24 @@
 import React from 'react';
 import { Drawer, List, ListItem, ListItemText, ListItemIcon } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-import SpaceDashboardIcon from '@mui/icons-material/SpaceDashboard';
-import AssignmentIcon from '@mui/icons-material/Assignment';
+import { NavItem } from './navItems';
 
-const navItems = [
-  { text: 'Officer Dashboard', path: '/officer/dashboard', icon: <SpaceDashboardIcon /> },
-  { text: 'Patient Dashboard', path: '/patient/dashboard', icon: <SpaceDashboardIcon /> },
-  { text: 'Officer Consultations', path: '/officer/consultations', icon: <AssignmentIcon /> },
-  { text: 'Patient Consultations', path: '/patient/consultations', icon: <AssignmentIcon /> },
-];
+interface SideNavBarProps {
+  navItems: NavItem[];
+}
 
-const SideNavBar: React.FC = () => {
+const drawerWidth = 240;
+
+const SideNavBar: React.FC<SideNavBarProps> = ({ navItems }) => {
   return (
-    <Drawer variant="permanent">
+    <Drawer
+      variant="permanent"
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box', top: 64 },
+      }}
+    >
       <List>
         {navItems.map((item, index) => (
           <ListItem button component={NavLink} to={item.path} key={index}>
