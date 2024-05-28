@@ -2,7 +2,7 @@ import React from 'react';
 import { useAuth } from '../hooks/useAuth';
 
 
-const Dashboard: React.FC = () => {
+const OfficerDashboard: React.FC = () => {
   const { user } = useAuth();
 
   return (
@@ -13,4 +13,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default OfficerDashboard;

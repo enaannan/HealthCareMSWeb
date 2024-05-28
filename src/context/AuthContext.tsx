@@ -2,6 +2,7 @@ import React, { createContext, useEffect, useState, ReactNode } from "react";
 import { LoginCredentials, User } from "../interfaces/User";
 import { AuthService } from "../services/authservice";
 import { useNavigate } from 'react-router-dom';
+import { Roles } from "../types/roles";
 
 interface AuthContextType {
   user: User | null;
@@ -43,7 +44,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (user) {
       setUser(user);
       localStorage.setItem('user', JSON.stringify(user));
-      navigate('/dashboard');
+      if (user.role_name === Roles.OFFICER) {
+        navigate('/officer/dashboard');
+      } else if (user.role_name === Roles.PATIENT) {
+        navigate('/patient/dashboard');
+      } else {
+        navigate('/unauthorized');
+      }
     }
   };
 
