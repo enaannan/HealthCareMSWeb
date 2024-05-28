@@ -68,7 +68,6 @@ const AuthRegister: React.FC = () => {
         }}
       >
         {({ errors, handleSubmit, handleChange, handleBlur, touched, values }) => {
-          console.log(values)
           return(
           <form noValidate onSubmit={handleSubmit}>
             <Grid container spacing={2}>

@@ -32,12 +32,12 @@ const MainRoutes =  [
     {
       path: '/',
       element: (
-        <AuthGuard roles={[Roles.DOCTOR,Roles.NURSE,Roles.PHARMACIST, Roles.PATIENT]} element={<MainLayout />} />
+        <AuthGuard roles={[Roles.OFFICER, Roles.DOCTOR,Roles.NURSE,Roles.PHARMACIST, Roles.PATIENT]} element={<MainLayout />} />
       ),
       children: [
         {
           path: 'officer/dashboard',
-          element: <AuthGuard roles={[Roles.DOCTOR]} element={<OfficerDashboard />} />,
+          element: <AuthGuard roles={[Roles.OFFICER]} element={<OfficerDashboard />} />,
         },
         {
           path: 'patient/dashboard',
@@ -45,7 +45,7 @@ const MainRoutes =  [
         },
         {
           path: 'officer/consultations',
-          element: <AuthGuard roles={[Roles.DOCTOR]} element={<OfficerConsultation />} />,
+          element: <AuthGuard roles={[Roles.OFFICER]} element={<OfficerConsultation />} />,
         },
         {
           path: 'patient/consultations',

@@ -7,7 +7,7 @@ const OfficerDashboard: React.FC = () => {
 
   return (
     <div>
-      <h1>Welcome to the Dashboard Doc !</h1>
+      <h1>Welcome to the Dashboard Officer</h1>
       <p>{`Hello, ${user?.username}!`}</p>
     </div>
   );

@@ -41,15 +41,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = async (loginCredentials: LoginCredentials) => {
-    const user = await CoreAuthService.login(loginCredentials);    if (user) {
+    const user = await CoreAuthService.login(loginCredentials);    
+    if (user) {
       setUser(user);
       localStorage.setItem('user', JSON.stringify(user));
-      if (user.role_name === Roles.DOCTOR || user.role_name === Roles.NURSE || user.role_name === Roles.PHARMACIST) {
-        navigate('/officer/dashboard');
-      } else if (user.role_name === Roles.PATIENT) {
-        navigate('/patient/dashboard');
-      } else {
-        navigate('/unauthorized');
+      switch (user.role_name) {
+        case Roles.DOCTOR:
+        case Roles.NURSE:
+        case Roles.PHARMACIST:
+          navigate('/practitioner/dashboard');
+          break;
+        case Roles.OFFICER:
+          navigate('/officer/dashboard');
+          break;
+        case Roles.PATIENT:
+          navigate('/patient/dashboard');
+          break;
+        default:
+          navigate('/unauthorized');
       }
       toast.success('Login successful');
     } else {
@@ -62,6 +71,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (newUser) {
       setUser(newUser);
       localStorage.setItem('user', JSON.stringify(newUser));
+      navigate('/login');
     }
   };
 

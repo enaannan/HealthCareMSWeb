@@ -13,6 +13,11 @@ export const officerNavItems: NavItem[] = [
   { text: 'Officer Consultations', path: '/officer/consultations', icon: <AssignmentIcon /> },
 ];
 
+export const practitionerNavItems: NavItem[] = [
+  { text: 'Practitioner Dashboard', path: '/practitioner/dashboard', icon: <SpaceDashboardIcon /> },
+  { text: 'Practitioner Consultations', path: '/practitioner/consultations', icon: <AssignmentIcon /> },
+];
+
 export const patientNavItems: NavItem[] = [
   { text: 'Patient Dashboard', path: '/patient/dashboard', icon: <SpaceDashboardIcon /> },
   { text: 'Patient Consultations', path: '/patient/consultations', icon: <AssignmentIcon /> },

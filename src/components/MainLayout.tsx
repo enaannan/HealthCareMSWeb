@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { CssBaseline, Toolbar, AppBar, Typography, Box } from '@mui/material';
 import { useAuth } from '../hooks/useAuth';
-import { NavItem, officerNavItems, patientNavItems } from './navItems';
+import { NavItem, officerNavItems, patientNavItems, practitionerNavItems } from './navItems';
 import SideNavBar from './SideBar';
 import { Roles } from '../types/roles';
 
@@ -14,11 +14,13 @@ const MainLayout: React.FC = () => {
 
   let navItems: NavItem[] = [];
   if (user?.role_name === Roles.DOCTOR || user?.role_name === Roles.NURSE || user?.role_name === Roles.PHARMACIST) {
-    navItems = officerNavItems;
+    navItems = practitionerNavItems;
   } else if (user?.role_name === Roles.PATIENT) {
     navItems = patientNavItems;
+  } else if (user?.role_name === Roles.OFFICER) {
+    navItems = officerNavItems;
   }
-  
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />

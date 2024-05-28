@@ -2,12 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { TextField, List, ListItem, ListItemText, Typography, Box, CircularProgress, Button } from '@mui/material';
 import { Consultation } from '../interfaces/Consultations';
 import { CoreService } from '../services/coreService';
-
+import ConsultationFormDialog from './ConsultationFormDialog';
 
 const OfficerConsultation: React.FC = () => {
   const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [newConsultation, setNewConsultation] = useState({
+    patient: '',
+    consultation_officer: '',
+    date: '',
+    healthcare_provider: '',
+    consultation_type: '',
+    medical_condition: '',
+    notes: '',
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,20 +29,39 @@ const OfficerConsultation: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleCreateConsultation = async () => {
-    const newConsultation = {
-      patient: 'patient-id', // Replace with actual patient ID
-      consultation_officer: 'officer-id', // Replace with actual officer ID
-      date: new Date().toISOString().split('T')[0],
-      healthcare_provider: 'Healthcare Provider',
-      consultation_type: 'Consultation Type',
-      medical_condition: 'Medical Condition',
-      notes: 'Notes',
-    };
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
-    const createdConsultation = await CoreService.createConsultation(newConsultation);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewConsultation({
+      ...newConsultation,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleCreateConsultation = async () => {
+    const formattedDate = newConsultation.date ? new Date(newConsultation.date).toISOString().split('T')[0] : '';
+    const createdConsultation = await CoreService.createConsultation({
+      ...newConsultation,
+      date: formattedDate,
+    });
     if (createdConsultation) {
       setConsultations([...consultations, createdConsultation]);
+      setNewConsultation({
+        patient: '',
+        consultation_officer: '',
+        date: '',
+        healthcare_provider: '',
+        consultation_type: '',
+        medical_condition: '',
+        notes: '',
+      });
+      setOpen(false);
     }
   };
 
@@ -56,9 +85,16 @@ const OfficerConsultation: React.FC = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         sx={{ mb: 2 }}
       />
-      <Button variant="contained" color="primary" onClick={handleCreateConsultation} sx={{ mb: 2 }}>
+      <Button variant="contained" color="primary" onClick={handleOpen} sx={{ mb: 2 }}>
         Create Consultation
       </Button>
+      <ConsultationFormDialog
+        open={open}
+        onClose={handleClose}
+        onChange={handleChange}
+        onSubmit={handleCreateConsultation}
+        newConsultation={newConsultation}
+      />
       {loading ? (
         <CircularProgress />
       ) : (
