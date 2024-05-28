@@ -1,11 +1,10 @@
 export interface User {
     id?: number;
-    name: string;
     email: string;
     username:string;
     first_name:string;
     last_name:string;
-    date_of_birth:Date
+    date_of_birth:string
     gender:string
     contact_number:string
     address:string

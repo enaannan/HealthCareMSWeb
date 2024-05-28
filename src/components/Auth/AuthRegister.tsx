@@ -40,13 +40,12 @@ const AuthRegister: React.FC = () => {
             username: values.username,
             first_name: values.first_name,
             last_name: values.last_name,
-            date_of_birth: new Date(values.date_of_birth),
+            date_of_birth: values.date_of_birth,
             gender: values.gender,
             contact_number: values.contact_number,
             address: values.address,
             email: values.email,
             password: values.password,
-            name: values.name,
           };
 
           try {
@@ -68,7 +67,9 @@ const AuthRegister: React.FC = () => {
           }
         }}
       >
-        {({ errors, handleSubmit, handleChange, handleBlur, touched, values }) => (
+        {({ errors, handleSubmit, handleChange, handleBlur, touched, values }) => {
+          console.log(values)
+          return(
           <form noValidate onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -213,19 +214,6 @@ const AuthRegister: React.FC = () => {
                   helperText={touched.confirmPassword && errors.confirmPassword}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="name"
-                  name="name"
-                  label="Name"
-                  value={values.name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.name && Boolean(errors.name)}
-                  helperText={touched.name && errors.name}
-                />
-              </Grid>
               {errors.submit && (
                 <Grid item xs={12}>
                   <FormHelperText error>{errors.submit}</FormHelperText>
@@ -238,7 +226,8 @@ const AuthRegister: React.FC = () => {
               </Grid>
             </Grid>
           </form>
-        )}
+          )}
+        }
       </Formik>
     </>
   );
