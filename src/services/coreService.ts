@@ -1,4 +1,5 @@
 import { Consultation } from "../interfaces/Consultations";
+import { User } from "../interfaces/User";
 import { axiosInstance } from "../utils/axiosConfig";
 import { toast } from 'react-toastify';
 
@@ -26,7 +27,22 @@ const fetchConsultations = async (): Promise<Consultation[]> => {
     }
   };
 
+  const fetchUser = async (param:string): Promise<User[]> => {
+    try {
+      const response = await axiosInstance.get(`/api/users/?search=${param}`,
+        {
+            withCredentials: true
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch patients', error);
+      return [];
+    }
+  };
+
 export const CoreService = {
     fetchConsultations,
-    createConsultation
+    createConsultation,
+    fetchUser
 };

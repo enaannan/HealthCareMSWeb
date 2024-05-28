@@ -37,10 +37,10 @@ const OfficerConsultation: React.FC = () => {
     setOpen(false);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (name: string, value: any) => {
     setNewConsultation({
       ...newConsultation,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 

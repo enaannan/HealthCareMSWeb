@@ -1,10 +1,12 @@
-import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Autocomplete } from '@mui/material';
+import { CoreService } from '../services/coreService';
+import { User } from '../interfaces/User';
 
 interface ConsultationFormDialogProps {
   open: boolean;
   onClose: () => void;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (name: string, value: any) => void;
   onSubmit: () => void;
   newConsultation: {
     patient: string;
@@ -18,23 +20,47 @@ interface ConsultationFormDialogProps {
 }
 
 const ConsultationFormDialog: React.FC<ConsultationFormDialogProps> = ({ open, onClose, onChange, onSubmit, newConsultation }) => {
+  const [patients, setPatients] = useState<User[]>([]);
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      const fetchedPatients = await CoreService.fetchUser("patient");
+      setPatients(fetchedPatients);
+    };
+
+    fetchPatients();
+  }, []);
+
+  const handlePatientChange = (event: any, value: User | null) => {
+    if (value) {
+      onChange('patient', value.id);
+    } else {
+      onChange('patient', '');
+    }
+  };
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Create Consultation</DialogTitle>
       <DialogContent>
-        <TextField
-          label="Patient"
-          name="patient"
-          value={newConsultation.patient}
-          onChange={onChange}
-          fullWidth
-          margin="normal"
+        <Autocomplete
+          options={patients}
+          getOptionLabel={(option) => `${option.first_name} ${option.last_name}`}
+          onChange={handlePatientChange}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Search Patient"
+              margin="normal"
+              fullWidth
+            />
+          )}
         />
         <TextField
           label="Consultation Officer"
           name="consultation_officer"
           value={newConsultation.consultation_officer}
-          onChange={onChange}
+          onChange={(e) => onChange(e.target.name, e.target.value)}
           fullWidth
           margin="normal"
         />
@@ -43,7 +69,7 @@ const ConsultationFormDialog: React.FC<ConsultationFormDialogProps> = ({ open, o
           name="date"
           type="date"
           value={newConsultation.date}
-          onChange={onChange}
+          onChange={(e) => onChange(e.target.name, e.target.value)}
           fullWidth
           margin="normal"
           InputLabelProps={{
@@ -54,7 +80,7 @@ const ConsultationFormDialog: React.FC<ConsultationFormDialogProps> = ({ open, o
           label="Healthcare Provider"
           name="healthcare_provider"
           value={newConsultation.healthcare_provider}
-          onChange={onChange}
+          onChange={(e) => onChange(e.target.name, e.target.value)}
           fullWidth
           margin="normal"
         />
@@ -62,7 +88,7 @@ const ConsultationFormDialog: React.FC<ConsultationFormDialogProps> = ({ open, o
           label="Consultation Type"
           name="consultation_type"
           value={newConsultation.consultation_type}
-          onChange={onChange}
+          onChange={(e) => onChange(e.target.name, e.target.value)}
           fullWidth
           margin="normal"
         />
@@ -70,7 +96,7 @@ const ConsultationFormDialog: React.FC<ConsultationFormDialogProps> = ({ open, o
           label="Medical Condition"
           name="medical_condition"
           value={newConsultation.medical_condition}
-          onChange={onChange}
+          onChange={(e) => onChange(e.target.name, e.target.value)}
           fullWidth
           margin="normal"
         />
@@ -78,7 +104,7 @@ const ConsultationFormDialog: React.FC<ConsultationFormDialogProps> = ({ open, o
           label="Notes"
           name="notes"
           value={newConsultation.notes}
-          onChange={onChange}
+          onChange={(e) => onChange(e.target.name, e.target.value)}
           fullWidth
           margin="normal"
           multiline
