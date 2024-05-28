@@ -1,32 +1,55 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, List, ListItem, ListItemText, Typography, Box, CircularProgress } from '@mui/material';
+import { TextField, Typography, Box, CircularProgress } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Consultation } from '../interfaces/Consultations';
 import { CoreService } from '../services/coreService';
-
 
 const PatientConsultations: React.FC = () => {
   const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await CoreService.fetchConsultations();
-      setConsultations(data);
-      setLoading(false);
-    };
+  const fetchConsultations = async (searchTerm: string = '') => {
+    setLoading(true);
+    const data = await CoreService.fetchConsultations(searchTerm);
+    setConsultations(data);
+    setLoading(false);
+  };
 
-    fetchData();
+  useEffect(() => {
+    fetchConsultations();
   }, []);
 
-  const filteredConsultations = consultations.filter((consultation) =>
-    consultation.healthcare_provider.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    consultation.consultation_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    consultation.medical_condition.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      fetchConsultations(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm]);
+
+  const columns: GridColDef<Consultation>[] = [
+    { field: 'date', headerName: 'Date', width: 150 },
+    { field: 'healthcare_provider', headerName: 'Healthcare Provider', width: 200 },
+    { field: 'consultation_type', headerName: 'Consultation Type', width: 200 },
+    { field: 'medical_condition', headerName: 'Medical Condition', width: 200 },
+    { field: 'notes', headerName: 'Notes', width: 300 },
+    { 
+      field: 'patientName', 
+      headerName: 'Patient Name', 
+      width: 200,
+      valueGetter: (value,row) => `${row.patient.first_name} ${row.patient.last_name}`,
+    },
+    { 
+      field: 'practitionerName', 
+      headerName: 'Practitioner Name', 
+      width: 200,
+      valueGetter: (value,row) => `${row.practitioner.first_name} ${row.practitioner.last_name}`,
+    },
+  ];
 
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ p: 2, height: '100vh', boxSizing: 'border-box' }}>
       <Typography variant="h4" gutterBottom>
         Patient Consultations
       </Typography>
@@ -41,34 +64,14 @@ const PatientConsultations: React.FC = () => {
       {loading ? (
         <CircularProgress />
       ) : (
-        <List>
-          {filteredConsultations.map((consultation) => (
-            <ListItem key={consultation.id}>
-              <ListItemText
-                primary={`Date: ${consultation.date}`}
-                secondary={
-                  <>
-                    <Typography component="span" variant="body2">
-                      Healthcare Provider: {consultation.healthcare_provider}
-                    </Typography>
-                    <br />
-                    <Typography component="span" variant="body2">
-                      Type: {consultation.consultation_type}
-                    </Typography>
-                    <br />
-                    <Typography component="span" variant="body2">
-                      Medical Condition: {consultation.medical_condition}
-                    </Typography>
-                    <br />
-                    <Typography component="span" variant="body2">
-                      Notes: {consultation.notes}
-                    </Typography>
-                  </>
-                }
-              />
-            </ListItem>
-          ))}
-        </List>
+        <Box sx={{ height: 'calc(100vh - 160px)', width: '100%' }}>
+          <DataGrid
+            rows={consultations}
+            columns={columns}
+            pageSizeOptions={[5, 10, 25]}
+            getRowId={(row) => row.id}
+          />
+        </Box>
       )}
     </Box>
   );

@@ -6,7 +6,6 @@ import { NavItem, officerNavItems, patientNavItems, practitionerNavItems } from 
 import SideNavBar from './SideBar';
 import { Roles } from '../types/roles';
 
-
 const drawerWidth = 240;
 
 const MainLayout: React.FC = () => {
@@ -34,7 +33,13 @@ const MainLayout: React.FC = () => {
       <SideNavBar navItems={navItems} />
       <Box
         component="main"
-        sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3, mt: 8, ml: `${drawerWidth}px` }}
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          marginTop: '64px',
+          width: `calc(100% - ${drawerWidth}px)`,
+          overflow: 'auto',
+        }}
       >
         <Outlet />
       </Box>

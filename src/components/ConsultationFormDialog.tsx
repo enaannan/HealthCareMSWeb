@@ -15,7 +15,6 @@ interface ConsultationFormDialogProps {
     healthcare_provider: string;
     consultation_type: string;
     medical_condition: string;
-    notes: string;
   };
 }
 
@@ -119,15 +118,6 @@ const ConsultationFormDialog: React.FC<ConsultationFormDialogProps> = ({ open, o
           onChange={(e) => onChange(e.target.name, e.target.value)}
           fullWidth
           margin="normal"
-        />
-        <TextField
-          label="Notes"
-          name="notes"
-          value={newConsultation.notes}
-          onChange={(e) => onChange(e.target.name, e.target.value)}
-          fullWidth
-          margin="normal"
-          multiline
         />
       </DialogContent>
       <DialogActions>

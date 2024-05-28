@@ -1,21 +1,21 @@
-import { Consultation } from "../interfaces/Consultations";
+import { Consultation, CreateConsultation } from "../interfaces/Consultations";
 import { User } from "../interfaces/User";
 import { axiosInstance } from "../utils/axiosConfig";
 import { toast } from 'react-toastify';
 
 
-const fetchConsultations = async (): Promise<Consultation[]> => {
+const fetchConsultations = async (searchTerm: string = ''): Promise<Consultation[]> => {
     try {
-      const response = await axiosInstance.get<Consultation[]>('/api/consultations/');
+      const params = searchTerm ? { search: searchTerm } : {};
+      const response = await axiosInstance.get<Consultation[]>(`/api/consultations/`, { params });
       return response.data;
     } catch (error) {
-      toast.error('Failed to fetch consultations');
       console.error('Failed to fetch consultations', error);
       return [];
     }
-  };
+  }
 
-  const createConsultation = async (consultation: Partial<Consultation>): Promise<Consultation | null> => {
+  const createConsultation = async (consultation: Partial<CreateConsultation>): Promise<Consultation | null> => {
     try {
       const response = await axiosInstance.post<Consultation>('/api/consultations/', consultation);
       toast.success('Consultation created successfully');
@@ -27,12 +27,10 @@ const fetchConsultations = async (): Promise<Consultation[]> => {
     }
   };
 
-  const fetchUser = async (param:string): Promise<User[]> => {
+  const fetchUser = async (searchTerm: string = ''): Promise<User[]> => {
     try {
-      const response = await axiosInstance.get(`/api/users/?search=${param}`,
-        {
-            withCredentials: true
-        }
+        const params = searchTerm ? { search: searchTerm } : {};
+      const response = await axiosInstance.get(`/api/users/`,{params}
       );
       return response.data;
     } catch (error) {
