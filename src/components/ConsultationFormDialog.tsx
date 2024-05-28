@@ -10,7 +10,7 @@ interface ConsultationFormDialogProps {
   onSubmit: () => void;
   newConsultation: {
     patient: string;
-    consultation_officer: string;
+    practitioner: string;
     date: string;
     healthcare_provider: string;
     consultation_type: string;
@@ -21,6 +21,7 @@ interface ConsultationFormDialogProps {
 
 const ConsultationFormDialog: React.FC<ConsultationFormDialogProps> = ({ open, onClose, onChange, onSubmit, newConsultation }) => {
   const [patients, setPatients] = useState<User[]>([]);
+  const [practitioners, setPractitioners] = useState<User[]>([]);
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -28,7 +29,13 @@ const ConsultationFormDialog: React.FC<ConsultationFormDialogProps> = ({ open, o
       setPatients(fetchedPatients);
     };
 
+    const fetchPractitioners = async () => {
+      const fetchedPractitioners = await CoreService.fetchUser("doctor");
+      setPractitioners(fetchedPractitioners);
+    };
+
     fetchPatients();
+    fetchPractitioners();
   }, []);
 
   const handlePatientChange = (event: any, value: User | null) => {
@@ -36,6 +43,14 @@ const ConsultationFormDialog: React.FC<ConsultationFormDialogProps> = ({ open, o
       onChange('patient', value.id);
     } else {
       onChange('patient', '');
+    }
+  };
+
+  const handlePractitionerChange = (event: any, value: User | null) => {
+    if (value) {
+      onChange('practitioner', value.id);
+    } else {
+      onChange('practitioner', '');
     }
   };
 
@@ -56,13 +71,18 @@ const ConsultationFormDialog: React.FC<ConsultationFormDialogProps> = ({ open, o
             />
           )}
         />
-        <TextField
-          label="Consultation Officer"
-          name="consultation_officer"
-          value={newConsultation.consultation_officer}
-          onChange={(e) => onChange(e.target.name, e.target.value)}
-          fullWidth
-          margin="normal"
+        <Autocomplete
+          options={practitioners}
+          getOptionLabel={(option) => `${option.first_name} ${option.last_name}`}
+          onChange={handlePractitionerChange}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Search Practitioner"
+              margin="normal"
+              fullWidth
+            />
+          )}
         />
         <TextField
           label="Date"

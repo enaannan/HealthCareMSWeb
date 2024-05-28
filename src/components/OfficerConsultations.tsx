@@ -11,7 +11,7 @@ const OfficerConsultation: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [newConsultation, setNewConsultation] = useState({
     patient: '',
-    consultation_officer: '',
+    practitioner: '',
     date: '',
     healthcare_provider: '',
     consultation_type: '',
@@ -54,7 +54,7 @@ const OfficerConsultation: React.FC = () => {
       setConsultations([...consultations, createdConsultation]);
       setNewConsultation({
         patient: '',
-        consultation_officer: '',
+        practitioner: '',
         date: '',
         healthcare_provider: '',
         consultation_type: '',
