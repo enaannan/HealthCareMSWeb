@@ -1,8 +1,9 @@
 import React, { createContext, useEffect, useState, ReactNode } from "react";
 import { LoginCredentials, User } from "../interfaces/User";
-import { AuthService } from "../services/authservice";
+import { CoreAuthService } from "../services/coreAuthAervice";
 import { useNavigate } from 'react-router-dom';
 import { Roles } from "../types/roles";
+import { toast } from "react-toastify";
 
 interface AuthContextType {
   user: User | null;
@@ -40,22 +41,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = async (loginCredentials: LoginCredentials) => {
-    const user = await AuthService.login(loginCredentials);
-    if (user) {
+    const user = await CoreAuthService.login(loginCredentials);    if (user) {
       setUser(user);
       localStorage.setItem('user', JSON.stringify(user));
-      if (user.role_name === Roles.OFFICER) {
+      if (user.role_name === Roles.DOCTOR || user.role_name === Roles.NURSE || user.role_name === Roles.PHARMACIST) {
         navigate('/officer/dashboard');
       } else if (user.role_name === Roles.PATIENT) {
         navigate('/patient/dashboard');
       } else {
         navigate('/unauthorized');
       }
+      toast.success('Login successful');
+    } else {
+      toast.error('Login failed');
     }
   };
 
   const register = async (user: User) => {
-    const newUser = await AuthService.register(user);
+    const newUser = await CoreAuthService.register(user);
     if (newUser) {
       setUser(newUser);
       localStorage.setItem('user', JSON.stringify(newUser));
@@ -63,7 +66,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = () => {
-    AuthService.logout();
+    CoreAuthService.logout();
     setUser(null);
     localStorage.removeItem('user');
     navigate('/login');

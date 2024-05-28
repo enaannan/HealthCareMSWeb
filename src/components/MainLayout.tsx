@@ -4,6 +4,7 @@ import { CssBaseline, Toolbar, AppBar, Typography, Box } from '@mui/material';
 import { useAuth } from '../hooks/useAuth';
 import { NavItem, officerNavItems, patientNavItems } from './navItems';
 import SideNavBar from './SideBar';
+import { Roles } from '../types/roles';
 
 
 const drawerWidth = 240;
@@ -12,12 +13,12 @@ const MainLayout: React.FC = () => {
   const { user } = useAuth();
 
   let navItems: NavItem[] = [];
-  if (user?.role_name === 'officer') {
+  if (user?.role_name === Roles.DOCTOR || user?.role_name === Roles.NURSE || user?.role_name === Roles.PHARMACIST) {
     navItems = officerNavItems;
-  } else if (user?.role_name === 'patient') {
+  } else if (user?.role_name === Roles.PATIENT) {
     navItems = patientNavItems;
   }
-
+  
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />

@@ -67,7 +67,7 @@ const logout = async (): Promise<void> => {
   }
 };
 
-export const AuthService = {
+export const CoreAuthService = {
   login,
   register,
   logout,

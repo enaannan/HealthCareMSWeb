@@ -2,15 +2,15 @@ import React from 'react';
 import { useAuth } from '../hooks/useAuth';
 
 
-const OfficerDashboard: React.FC = () => {
+const NurseDashboard: React.FC = () => {
   const { user } = useAuth();
 
   return (
     <div>
-      <h1>Welcome to the Dashboard Doc !</h1>
+      <h1>Welcome to the Dashboard Nurse !</h1>
       <p>{`Hello, ${user?.username}!`}</p>
     </div>
   );
 };
 
-export default OfficerDashboard;
+export default NurseDashboard;

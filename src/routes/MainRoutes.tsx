@@ -3,13 +3,13 @@ import { Navigate } from 'react-router-dom';
 import Login from '../components/Auth/Login';
 import Register from '../components/Auth/Register';
 import MainLayout from '../components/MainLayout';
-import OfficerConsultations from '../components/OfficerConsultations';
 import OfficerDashboard from '../components/OfficerDashboard';
 import PatientConsultations from '../components/PatientConsultations';
 import PatientDashboard from '../components/PatientDashboard';
 import Unauthorized from '../components/Unauthorized';
 import { Roles } from '../types/roles';
 import AuthGuard from '../components/Auth/AuthGuard';
+import OfficerConsultation from '../components/OfficerConsultations';
 
 
 const MainRoutes =  [
@@ -32,12 +32,12 @@ const MainRoutes =  [
     {
       path: '/',
       element: (
-        <AuthGuard roles={[Roles.OFFICER, Roles.PATIENT]} element={<MainLayout />} />
+        <AuthGuard roles={[Roles.DOCTOR,Roles.NURSE,Roles.PHARMACIST, Roles.PATIENT]} element={<MainLayout />} />
       ),
       children: [
         {
           path: 'officer/dashboard',
-          element: <AuthGuard roles={[Roles.OFFICER]} element={<OfficerDashboard />} />,
+          element: <AuthGuard roles={[Roles.DOCTOR]} element={<OfficerDashboard />} />,
         },
         {
           path: 'patient/dashboard',
@@ -45,7 +45,7 @@ const MainRoutes =  [
         },
         {
           path: 'officer/consultations',
-          element: <AuthGuard roles={[Roles.OFFICER]} element={<OfficerConsultations />} />,
+          element: <AuthGuard roles={[Roles.DOCTOR]} element={<OfficerConsultation />} />,
         },
         {
           path: 'patient/consultations',

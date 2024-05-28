@@ -1,3 +1,5 @@
+import { Role } from "../types/roles";
+
 export interface User {
     id?: number;
     email: string;
@@ -9,7 +11,7 @@ export interface User {
     contact_number:string
     address:string
     password:string
-    role_name?:string
+    role_name?:Role
 }
 
 export interface LoginCredentials{
